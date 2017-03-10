@@ -15,20 +15,25 @@ def main():
     print(len([item for item in os.listdir(original_dir) if os.path.splitext(item)[1]=='.csv']))
     print(set([item for item in os.listdir(original_dir) if os.path.splitext(item)[1]=='.csv']) - set(append_filelist))
 
-    item = append_filelist[0]
-    with open(append_dir+item,'r') as appendfile, open(original_dir+item,'r') as originalfile:
-        
-        read_originalfile = originalfile.readlines()
-        read_appendfile = appendfile.readlines()
-    originalset = set(read_originalfile)
-    appendset = set(read_appendfile)
-    results = originalset.difference(appendset)
-    if len(results) >= 2:
-        originaldataframe = pd.read_csv(StringIO(''.join(read_originalfile)),sep=',')
-        appenddataframe = pd.read_csv(StringIO(''.join(read_appendfile)),sep=',')
-        originaldataframe = pd.concat([originaldataframe, appenddataframe])
-        originaldataframe = originaldataframe.reset_index(drop=True)
-        originaldataframe.to_csv(item,index=False)
+    for item in append_filelist:
+        with open(append_dir+item,'r') as appendfile, open(original_dir+item,'r') as originalfile:
+            
+            read_originalfile = originalfile.readlines()
+            read_appendfile = appendfile.readlines()
+        originalset = set(read_originalfile)
+        appendset = set(read_appendfile)
+        results = originalset.difference(appendset)
+        if len(results) >= 2:
+            print(item)
+            originaldataframe = pd.read_csv(StringIO(''.join(read_originalfile)),sep=',')
+            appenddataframe = pd.read_csv(StringIO(''.join(read_appendfile)),sep=',')
+            print('original : ',originaldataframe.size)
+            print('append : ',appenddataframe.size)
+            originaldataframe = pd.concat([originaldataframe, appenddataframe])
+            originaldataframe = originaldataframe.reset_index(drop=True)
+            originaldataframe.to_csv(original_dir+item,index=False)
+            print('originalconcat : ',originaldataframe.size)
+    print('end')
 
 
 
