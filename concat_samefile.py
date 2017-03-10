@@ -13,20 +13,14 @@ def main():
     print(len([item for item in os.listdir(original_dir) if os.path.splitext(item)[1]=='.csv']))
     print(set([item for item in os.listdir(original_dir) if os.path.splitext(item)[1]=='.csv']) - set(append_filelist))
 
-#    item = append_filelist[36]
-#    with open(append_dir+item,'r') as appendfile, open(original_dir+item,'r') as originalfile:
-#        
-#        originalset = set(originalfile.readlines())
-#        appendset = set(appendfile.readlines())
-#        results = originalset.difference(appendset)
-#        for result in results:
-#            print(result)
-#
-#        diff = difflib.ndiff(appendfile.readlines(), originalfile.readlines())
-#        delta = ''.join(x[2:] for x in diff if x.startswith('- '))
-#        print(delta)
-#        appendstr = appendfile.read()
-#        originalstr = originalfile.read()
+    item = append_filelist[0]
+    with open(append_dir+item,'r') as appendfile, open(original_dir+item,'r') as originalfile:
+        
+        originalset = set(originalfile.readlines())
+        appendset = set(appendfile.readlines())
+        results = originalset.difference(appendset)
+        if len(results) >= 2:
+            pass
 
 
 if __name__ == '__main__':
