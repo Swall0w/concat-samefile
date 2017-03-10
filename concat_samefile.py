@@ -2,6 +2,8 @@
 import os
 import os.path
 import difflib
+from io import StringIO
+import pandas as pd
 
 def main():
     original_dir = 'separate_jornaldata/'
@@ -16,11 +18,19 @@ def main():
     item = append_filelist[0]
     with open(append_dir+item,'r') as appendfile, open(original_dir+item,'r') as originalfile:
         
-        originalset = set(originalfile.readlines())
-        appendset = set(appendfile.readlines())
-        results = originalset.difference(appendset)
-        if len(results) >= 2:
-            pass
+        read_originalfile = originalfile.readlines()
+        read_appendfile = appendfile.readlines()
+    originalset = set(read_originalfile)
+    appendset = set(read_appendfile)
+    results = originalset.difference(appendset)
+    if len(results) >= 2:
+        originaldataframe = pd.read_csv(StringIO(''.join(read_originalfile)),sep=',')
+        appenddataframe = pd.read_csv(StringIO(''.join(read_appendfile)),sep=',')
+        originaldataframe = pd.concat([originaldataframe, appenddataframe])
+        originaldataframe = originaldataframe.reset_index(drop=True)
+        originaldataframe.to_csv(item,index=False)
+
+
 
 
 if __name__ == '__main__':
